@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Builder</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+      }
+      label {
+        font-weight: bold;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      h2 {
+        margin-top: 20px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+      }
+      h3 {
+        margin-top: 15px;
+      }
+      ul {
+        list-style-type: disc;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Resume Builder</h1>
+      <form id="resumeForm">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required />
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" required />
+
+        <h2>Professional Summary</h2>
+        <textarea id="summary" required></textarea>
+
+        <h2>Education</h2>
+        <label for="school">School/University:</label>
+        <input type="text" id="school" class="education" required />
+
+        <label for="degree">Degree:</label>
+        <input type="text" id="degree" class="education" required />
+
+        <label for="gradYear">Graduation Year:</label>
+        <input type="number" id="gradYear" class="education" required />
+
+        <h2>Work Experience</h2>
+        <label for="jobTitle">Job Title:</label>
+        <input type="text" id="jobTitle" class="experience" required />
+
+        <label for="company">Company:</label>
+        <input type="text" id="company" class="experience" required />
+
+        <label for="jobDescription">Job Description:</label>
+        <textarea id="jobDescription" class="experience" required></textarea>
+
+        <h2>Skills</h2>
+        <textarea id="skills" required></textarea>
+
+        <h2>Projects</h2>
+        <textarea id="projects" required></textarea>
+
+        <button type="button" onclick="generateResume()">
+          Generate Resume
+        </button>
+        <button type="button" onclick="downloadResume()">Download PDF</button>
+      </form>
+
+      <h2>Generated Resume</h2>
+      <div id="generatedResume"></div>
+    </div>
+
+    <script>
+      function generateResume() {
+        const fullName = document.getElementById("fullName").value;
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+        const summary = document.getElementById("summary").value;
+
+        const educationItems = document.querySelectorAll(".education");
+        const educationList = [];
+        for (const item of educationItems) {
+          educationList.push(item.value);
+        }
+
+        const experienceItems = document.querySelectorAll(".experience");
+        const experienceList = [];
+        for (const item of experienceItems) {
+          experienceList.push(item.value);
+        }
+
+        const skills = document.getElementById("skills").value;
+        const projects = document.getElementById("projects").value;
+
+        const resumeContent = `
+    <h2>${fullName}</h2>
+    <p>Email: ${email}</p>
+    <p>Phone: ${phone}</p>
+
+    <h3>Professional Summary</h3>
+    <p>${summary}</p>
+    
+    <h3>Education</h3>
+    <ul>
+      <li>${educationList.join("</li><li>")}</li>
+    </ul>
+    
+    <h3>Work Experience</h3>
+    <ul>
+      <li>${experienceList.join("</li><li>")}</li>
+    </ul>
+
+    <h3>Skills</h3>
+    <p>${skills}</p>
+
+    <h3>Projects</h3>
+    <p>${projects}</p>
+  `;
+
+        document.getElementById("generatedResume").innerHTML = resumeContent;
+      }
+      function downloadResume() {
+        const resumeContent =
+          document.getElementById("generatedResume").innerHTML;
+        const blob = new Blob([resumeContent], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "resume.pdf";
+        a.click();
+
+        // Clean up the temporary URL
+        URL.revokeObjectURL(url);
+      }
+    </script>
+  </body>
+</html>
